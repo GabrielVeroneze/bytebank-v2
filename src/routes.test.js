@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { getByTestId, render, screen } from '@testing-library/react'
 import { BrowserRouter, MemoryRouter, Route, Routes } from 'react-router-dom'
 import App from './paginas/Principal/App'
 import Cartoes from './componentes/Cartoes'
@@ -27,5 +27,18 @@ describe('Rotas', () => {
         const meusCartoes = screen.getByText('Meus cartões')
 
         expect(meusCartoes).toHaveTextContent('Meus cartões')
+    })
+
+    test('Deve renderizar a localização da rota atual', () => {
+        const rota = '/cartoes'
+        render(
+            <MemoryRouter initialEntries={[rota]}>
+                <App />
+            </MemoryRouter>
+        )
+
+        const localizacaoAtual = screen.getByTestId('local')
+
+        expect(localizacaoAtual).toHaveTextContent(rota)
     })
 })
