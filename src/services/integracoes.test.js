@@ -41,6 +41,14 @@ const mockRequisicaoPost = () => {
     })
 }
 
+const mockRequisicaoPostErro = () => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            reject()
+        }, 200)
+    })
+}
+
 describe('Requisições para API', () => {
     test('Deve retornar uma lista de transações', async () => {
         api.get.mockImplementation(() => mockRequisicao(mockTransacao))
@@ -66,6 +74,15 @@ describe('Requisições para API', () => {
         const status = await salvaTransacao(mockTransacao[0])
 
         expect(status).toBe(201)
+        expect(api.post).toHaveBeenCalledWith('/transacoes', mockTransacao[0])
+    })
+
+    test('Deve retornar uma mensagem de erro ao falhar uma requisição POST', async () => {
+        api.post.mockImplementation(() => mockRequisicaoPostErro())
+
+        const status = await salvaTransacao(mockTransacao[0])
+
+        expect(status).toBe('Erro na requisição')
         expect(api.post).toHaveBeenCalledWith('/transacoes', mockTransacao[0])
     })
 })
